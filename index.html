@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KasFlow — Manajemen Kas Kelas</title>
+<style>
+:root{--navy:#4b3027;--blue:#9a6546;--bg:#f7f0e7;--text:#38271f;--muted:#927d70;--line:#eadccd;--green:#63845d;--red:#bd6658;--card:#fffdf9}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text)}.panel,.stat,.form-card{box-shadow:0 5px 18px rgba(91,61,42,.045)}
+.app{min-height:100vh;display:grid;grid-template-columns:245px 1fr}.sidebar{background:#4b3027;color:#fff8ef;padding:25px 17px;display:flex;flex-direction:column;gap:26px;min-height:100vh}
+.brand{display:flex;align-items:center;gap:11px;padding:0 9px}.brand-mark{width:39px;height:39px;border-radius:13px;background:#f1d8b8;color:#68432f;display:grid;place-items:center;font-weight:900;font-size:20px}.brand strong{font-size:19px;letter-spacing:.2px}.brand small{display:block;color:#e0c5ad;font-size:11px;margin-top:2px}
+.nav-label{font-size:10px;letter-spacing:1.5px;color:#d5b9a2;padding:0 12px;margin-bottom:8px}.nav{display:flex;flex-direction:column;gap:7px}.nav button{width:100%;border:0;background:transparent;color:#f0dfd0;text-align:left;padding:12px 13px;border-radius:11px;font:inherit;font-size:14px;cursor:pointer;display:flex;gap:12px;align-items:center}.nav button:hover,.nav button.active{background:#76513f;color:#fff8ef}.nav .ico{width:20px;text-align:center;font-size:16px}.side-note{margin-top:auto;border:1px solid #795846;background:#5a3b30;padding:14px;border-radius:14px;color:#f0dfd0;font-size:12px;line-height:1.5}
+main{min-width:0;padding:30px 34px 50px;max-width:1500px;width:100%;margin:auto}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:26px}.eyebrow{color:var(--muted);font-size:12px;margin-bottom:5px}.topbar h1{font-size:25px;margin:0;letter-spacing:-.6px}.user-chip{background:#fff;border:1px solid var(--line);padding:9px 13px;border-radius:30px;font-size:12px;color:#46536b}
+.page{display:none}.page.active{display:block}.welcome{display:flex;justify-content:space-between;align-items:center;gap:20px;background:linear-gradient(115deg,#684431,#b47b53);color:#fffaf3;padding:25px 27px;border-radius:18px;margin-bottom:20px;overflow:hidden}.welcome h2{font-size:21px;margin:0 0 7px}.welcome p{margin:0;color:#f4e4d4;font-size:13px}.welcome .date{font-size:12px;color:#f4e4d4;text-align:right}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:20px}.stat,.panel,.form-card{background:var(--card);border:1px solid var(--line);border-radius:16px}.stat{padding:18px}.stat-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px}.stat-icon{width:34px;height:34px;border-radius:11px;background:#f4e8d9;display:grid;place-items:center;font-size:17px}.stat strong{display:block;font-size:23px;margin-top:13px;letter-spacing:-.5px}.stat small{color:var(--muted);font-size:11px}
+.content-grid{display:grid;grid-template-columns:1.45fr 1fr;gap:16px}.panel{padding:19px;min-width:0}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}.panel h3{font-size:15px;margin:0}.sub{color:var(--muted);font-size:11px}.btn{border:0;background:var(--blue);color:#fffaf3;border-radius:10px;padding:10px 14px;font-weight:650;font-size:12px;cursor:pointer}.btn:hover{filter:brightness(.95)}.btn.secondary{background:#f2e6d8;color:#704a34}.btn.danger{background:#fff0f1;color:#bd3445}.btn.ghost{background:#f1f3f8;color:#44506a}.actions{display:flex;gap:8px;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse;font-size:12px}th{text-align:left;color:#8993a7;font-weight:600;font-size:10px;letter-spacing:.5px;padding:11px 8px;border-bottom:1px solid var(--line)}td{padding:12px 8px;border-bottom:1px solid #f0f2f7}tr:last-child td{border-bottom:0}.amount-in{color:var(--green);font-weight:700}.amount-out{color:var(--red);font-weight:700}.pill{display:inline-block;padding:5px 8px;border-radius:20px;font-size:10px;font-weight:700}.pill.paid{background:#e8f8f1;color:#12815d}.pill.unpaid{background:#fff2e5;color:#b56a16}
+.form-layout{display:grid;grid-template-columns:minmax(260px,.8fr) 1.2fr;gap:16px}.form-card{padding:20px}.form-card h3{margin:0 0 17px;font-size:16px}.field{display:grid;gap:6px;margin-bottom:13px}.field label{font-size:11px;font-weight:650;color:#536078}.field input,.field select,.field textarea,.toolbar input,.toolbar select{width:100%;border:1px solid #dfe4ee;border-radius:9px;padding:10px 11px;font:inherit;font-size:12px;background:#fff;color:var(--text)}.field input:focus,.field select:focus,.toolbar input:focus{outline:2px solid #dce5ff;border-color:#8da5ff}.toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:13px}.toolbar input{max-width:230px}.toolbar select{max-width:170px}.empty{text-align:center;color:var(--muted);padding:28px 10px;font-size:12px}.summary-strip{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}.summary-strip div{background:#f5f7fc;border-radius:10px;padding:10px 13px;font-size:11px;color:#69758c}.summary-strip strong{display:block;color:var(--text);font-size:15px;margin-top:3px}.bar-wrap{display:flex;align-items:end;gap:9px;height:155px;padding:12px 4px 0}.bar-group{flex:1;display:flex;align-items:center;justify-content:end;flex-direction:column;height:100%;gap:6px}.bars{height:115px;width:100%;display:flex;align-items:end;justify-content:center;gap:4px}.bar{width:15px;max-width:38%;border-radius:5px 5px 0 0;min-height:2px}.bar.in{background:#36b88c}.bar.out{background:#f08a96}.bar-label{font-size:9px;color:var(--muted)}
+.editor-only{display:none!important}.editor-cell{display:none!important}body.admin .editor-only{display:block!important}body.admin td.editor-cell,body.admin th.editor-cell{display:table-cell!important}.auth-area{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.auth-status{font-size:12px;color:var(--muted);background:#fff;border:1px solid var(--line);padding:9px 12px;border-radius:30px}.modal-backdrop{position:fixed;inset:0;background:rgba(35,23,18,.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:1000}.modal-backdrop.open{display:flex}.login-card{width:min(100%,390px);background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 18px 60px rgba(35,23,18,.25)}.login-card h2{margin:0 0 7px;font-size:20px}.login-card p{color:var(--muted);font-size:12px;line-height:1.5;margin:0 0 18px}.login-card .field input{font-size:14px}.login-error{display:none;color:var(--red);font-size:12px;margin:0 0 12px}.login-error.show{display:block}.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}.public-note{margin:0 0 16px;padding:10px 13px;background:#f5eadc;border:1px solid var(--line);border-radius:10px;color:#76553e;font-size:12px}
+.payment-table{min-width:620px}.payment-table th,.payment-table td{text-align:center}.payment-table th:first-child,.payment-table td:first-child{text-align:left;min-width:170px}.week-check{width:22px;height:22px;accent-color:#63845d;cursor:pointer;vertical-align:middle}.week-check:disabled{cursor:default;opacity:1}.week-cell{min-width:90px}.fresh-label{display:block;font-size:9px;color:#63845d;font-weight:700;margin-top:3px}.summary-names{font-size:12px;line-height:1.9}.summary-names .name-item{padding:7px 9px;border-bottom:1px solid var(--line)}.summary-names .empty{padding:15px}.bulk-hint{font-size:11px;color:var(--muted)}.holiday-head{background:#f7e8e4!important;color:#a34f45!important}.holiday-cell{background:#fff5f2;color:#a34f45;min-width:105px}.holiday-strike{text-decoration:line-through;text-decoration-thickness:2px;font-weight:800;color:#a34f45}.holiday-label{display:block;font-size:10px;font-weight:800;margin-top:4px}.holiday-reason{display:block;font-size:10px;line-height:1.35;color:#8c6a60;margin-top:3px;white-space:normal;max-width:145px}.holiday-control{display:block;margin-top:5px;font-size:9px;padding:5px 7px}.week-check:disabled{cursor:default;opacity:1}
+.notice{background:#fbf3e9;border:1px solid #edddca;color:#806b5c;padding:12px;border-radius:10px;font-size:11px;line-height:1.5;margin-top:14px}
+@media(max-width:850px){.app{grid-template-columns:1fr}.sidebar{padding:18px 16px;gap:16px;min-height:auto}.brand{padding:0 5px}.nav-label{display:block}.side-note{display:none}.nav{display:flex;flex-direction:column;overflow:visible}.nav button{white-space:normal;padding:11px 13px}.nav button .ico{display:inline-block}main{padding:22px 16px}.content-grid,.form-layout{grid-template-columns:1fr}}
+@media(max-width:560px){.stats{grid-template-columns:1fr}.welcome{padding:20px}.welcome .date{display:none}.topbar h1{font-size:21px}.user-chip{display:none}.panel{padding:14px}.table-scroll{overflow-x:auto}table{min-width:510px}}
+@media print{.sidebar,.topbar .user-chip,.no-print,.btn,.toolbar{display:none!important}.app{display:block}main{padding:0}.page{display:none!important}.page.active{display:block!important}.panel,.stat{break-inside:avoid;box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-mark">K</div><div><strong>KasFlow</strong><small>CLASS CASH MANAGEMENT</small></div></div>
+  <div><div class="nav-label">MENU UTAMA</div><nav class="nav" id="navigation">
+    <button type="button" class="active" data-page="dashboard"><span class="ico">▦</span>Dashboard</button>
+    <button type="button" data-page="income"><span class="ico">↗</span>Pemasukan Kas</button>
+    <button type="button" data-page="expense"><span class="ico">↙</span>Pengeluaran Kas</button>
+    <button type="button" data-page="students"><span class="ico">♙</span>Data Pembayaran</button>
+    <button type="button" data-page="monthlySummary"><span class="ico">▦</span>Rekap Bulanan</button>
+    <button type="button" data-page="reports"><span class="ico">▤</span>Laporan Keuangan</button>
+  </nav></div>
+  <div class="side-note">Kelola kas kelas dengan lebih rapi, transparan, dan mudah dipantau.<br><br><b>KasFlow · Versi 1.0</b></div>
+</aside>
+<main>
+  <header class="topbar"><div><div class="eyebrow">MANAJEMEN KEUANGAN KELAS</div><h1 id="pageTitle">Dashboard</h1></div><div class="auth-area"><span class="auth-status" id="authStatus">Mode publik · Hanya melihat</span><button class="btn" id="loginOpen" type="button">Login Bendahara</button><button class="btn secondary" id="logoutBtn" type="button" style="display:none">Logout</button></div></header>
+
+  <div class="public-note" id="publicNote">👀 Anda sedang melihat data kas dalam mode publik. Login bendahara diperlukan untuk mengubah data.</div>
+  <section class="page active" id="dashboard">
+    <div class="welcome"><div><h2>Selamat datang di KasFlow ☕</h2><p>Catat setiap pemasukan dan pengeluaran dengan rapi, semanis suasana bakery.</p></div><div class="date" id="today"></div></div>
+    <div class="stats">
+      <div class="stat"><div class="stat-top"><span>Total Saldo Kas</span><span class="stat-icon">💰</span></div><strong id="balance">Rp0</strong><small>Saldo saat ini</small></div>
+      <div class="stat"><div class="stat-top"><span>Total Pemasukan</span><span class="stat-icon">↗️</span></div><strong id="totalIncome">Rp0</strong><small>Akumulasi pemasukan</small></div>
+      <div class="stat"><div class="stat-top"><span>Total Pengeluaran</span><span class="stat-icon">↘️</span></div><strong id="totalExpense">Rp0</strong><small>Akumulasi pengeluaran</small></div>
+    </div>
+    <div class="content-grid">
+      <div class="panel"><div class="panel-head"><div><h3>Transaksi Terbaru</h3><span class="sub">Catatan pemasukan dan pengeluaran</span></div><button class="btn secondary" onclick="showPage('reports')">Lihat laporan</button></div><div class="table-scroll"><table><thead><tr><th>TANGGAL</th><th>KETERANGAN</th><th>JENIS</th><th>JUMLAH</th></tr></thead><tbody id="recentRows"></tbody></table></div></div>
+      <div class="panel"><div class="panel-head"><div><h3>Ringkasan Kas</h3><span class="sub">Perbandingan total transaksi</span></div></div><div class="summary-strip"><div>Pemasukan<strong id="chartIncome">Rp0</strong></div><div>Pengeluaran<strong id="chartExpense">Rp0</strong></div></div><div class="bar-wrap" id="bars"></div><div class="sub" style="display:flex;gap:15px;margin-top:12px"><span>🟢 Pemasukan</span><span>🌸 Pengeluaran</span></div></div>
+    </div>
+  </section>
+
+  <section class="page" id="income">
+    <div class="form-layout">
+      <div class="form-card editor-only"><h3>＋ Tambah Pemasukan</h3><form id="incomeForm"><div class="field"><label>Tanggal</label><input type="date" name="date" required></div><div class="field"><label>Sumber pemasukan</label><select name="category"><option>Iuran siswa</option><option>Sumbangan sukarela</option><option>Dana kegiatan</option><option>Lainnya</option></select></div><div class="field"><label>Nama / keterangan</label><input name="note" placeholder="Contoh: Iuran kas mingguan" required></div><div class="field"><label>Nominal (Rp)</label><input type="text" name="amount" inputmode="numeric" autocomplete="off" placeholder="Contoh: 600.000" required></div><button class="btn" type="submit">Simpan pemasukan</button></form></div>
+      <div class="panel"><div class="panel-head"><div><h3>Riwayat Pemasukan</h3><span class="sub">Daftar uang yang diterima</span></div></div><div class="table-scroll"><table><thead><tr><th>TANGGAL</th><th>KETERANGAN</th><th>NOMINAL</th><th class="no-print editor-cell">AKSI</th></tr></thead><tbody id="incomeRows"></tbody></table></div></div>
+    </div>
+  </section>
+
+  <section class="page" id="expense">
+    <div class="form-layout">
+      <div class="form-card editor-only"><h3>－ Tambah Pengeluaran</h3><form id="expenseForm"><div class="field"><label>Tanggal</label><input type="date" name="date" required></div><div class="field"><label>Kategori pengeluaran</label><select name="category"><option>Perlengkapan kelas</option><option>Alat kebersihan</option><option>Biaya kegiatan</option><option>Konsumsi</option><option>Lainnya</option></select></div><div class="field"><label>Nama / keterangan</label><input name="note" placeholder="Contoh: Membeli spidol" required></div><div class="field"><label>Nominal (Rp)</label><input type="text" name="amount" inputmode="numeric" autocomplete="off" placeholder="Contoh: 200.000" required></div><button class="btn" type="submit">Simpan pengeluaran</button></form></div>
+      <div class="panel"><div class="panel-head"><div><h3>Riwayat Pengeluaran</h3><span class="sub">Daftar uang yang digunakan</span></div></div><div class="table-scroll"><table><thead><tr><th>TANGGAL</th><th>KETERANGAN</th><th>NOMINAL</th><th class="no-print editor-cell">AKSI</th></tr></thead><tbody id="expenseRows"></tbody></table></div></div>
+    </div>
+  </section>
+
+  <section class="page" id="students">
+    <div class="panel" style="margin-bottom:16px">
+      <div class="panel-head"><div><h3>🗓️ Periode Pembayaran</h3><span class="sub">Pilih bulan untuk melihat centang iuran mingguan</span></div><span class="pill paid" id="monthFeeLabel">Rp5.000 / minggu</span></div>
+      <div class="toolbar"><button class="btn secondary" type="button" id="prevMonth">← Bulan sebelumnya</button><select id="paymentMonth" aria-label="Pilih bulan"></select><button class="btn secondary" type="button" id="nextMonth">Bulan berikutnya →</button><input type="month" id="customMonth" aria-label="Pilih bulan lain"></div>
+      <div class="sub">Tersedia 5 minggu. Bendahara dapat menandai minggu tertentu sebagai <b>Libur Kas</b> dan menuliskan alasannya. Minggu libur tidak dihitung sebagai tagihan.</div>
+    </div>
+    <div class="form-layout">
+      <div class="form-card editor-only">
+        <h3>🥐 Tambah Banyak Siswa</h3>
+        <form id="bulkStudentForm"><div class="field"><label for="bulkNames">Daftar nama siswa (satu nama per baris)</label><textarea id="bulkNames" name="names" rows="9" placeholder="Alya Putri&#10;Bima Pratama&#10;Citra Lestari" required></textarea></div><button class="btn" type="submit">＋ Tambahkan Semua Nama</button></form>
+        <div class="notice">Salin daftar dari WhatsApp, Excel, atau catatan. Satu baris akan menjadi satu siswa. Nama yang sudah terdaftar tidak akan ditambahkan dua kali.</div>
+        <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+        <h3>⚙️ Pengaturan Iuran</h3><form id="feeForm"><div class="field"><label for="weeklyFee">Nominal tetap per minggu (Rp)</label><input id="weeklyFee" name="weeklyFee" type="number" min="1" step="500" value="5000" required></div><button class="btn secondary" type="submit">Simpan nominal</button></form>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div><h3>Data Pembayaran Siswa</h3><span class="sub" id="paymentTableSubtitle">Centang pembayaran setiap minggu</span></div><input id="studentSearch" placeholder="Cari nama siswa..." style="max-width:190px"></div>
+        <div class="summary-strip"><div>Total terkumpul bulan ini<strong id="monthCollected">Rp0</strong></div><div>Siswa terdaftar<strong id="studentCount">0</strong></div><div>Sudah lunas penuh<strong id="fullyPaidCount">0</strong></div></div>
+        <div class="table-scroll"><table class="payment-table"><thead id="paymentHead"></thead><tbody id="studentRows"></tbody></table></div>
+        <div class="notice">Publik dapat melihat status pembayaran, tetapi hanya bendahara yang login dapat mengubah centang atau daftar siswa.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="monthlySummary">
+    <div class="panel">
+      <div class="panel-head"><div><h3>🍞 Rekap Bulanan Pembayaran</h3><span class="sub">Ringkasan otomatis berdasarkan centang mingguan</span></div><button class="btn secondary no-print" type="button" onclick="showPage('students')">Kembali ke tabel</button></div>
+      <div class="toolbar"><label class="sub" for="summaryMonth">Bulan rekap:</label><select id="summaryMonth"></select></div>
+      <div class="stats" style="margin-top:12px"><div class="stat"><div class="stat-top"><span>Total uang terkumpul</span><span class="stat-icon">💰</span></div><strong id="summaryCollected">Rp0</strong><small id="summaryWeekCount">0 pembayaran diterima</small></div><div class="stat"><div class="stat-top"><span>Lunas penuh</span><span class="stat-icon">🥐</span></div><strong id="summaryFullyPaid">0</strong><small>Siswa membayar semua minggu aktif</small></div><div class="stat"><div class="stat-top"><span>Belum lunas</span><span class="stat-icon">⏳</span></div><strong id="summaryNotFull">0</strong><small>Masih ada minggu yang belum dibayar</small></div></div>
+      <div class="content-grid">
+        <div class="panel"><div class="panel-head"><h3>Freshly Baked · Lunas Penuh</h3></div><div id="fullyPaidList" class="summary-names"></div></div>
+        <div class="panel"><div class="panel-head"><h3>Masih Perlu Pembayaran</h3></div><div id="notFullList" class="summary-names"></div></div>
+      </div>
+      <div class="notice">Lunas penuh berarti seluruh minggu aktif (di luar Libur Kas) pada bulan yang dipilih sudah dicentang. Minggu Libur Kas tidak dihitung sebagai pembayaran atau tagihan.</div>
+    </div>
+  </section>
+
+  <section class="page" id="reports">
+    <div class="panel">
+      <div class="panel-head"><div><h3>Laporan Keuangan</h3><span class="sub">Rekap seluruh transaksi kas kelas</span></div><div class="actions no-print"><button class="btn secondary" onclick="exportCSV()">Ekspor CSV</button><button class="btn" onclick="window.print()">Cetak laporan</button></div></div>
+      <div class="summary-strip"><div>Total pemasukan<strong id="reportIncome">Rp0</strong></div><div>Total pengeluaran<strong id="reportExpense">Rp0</strong></div><div>Saldo akhir<strong id="reportBalance">Rp0</strong></div></div>
+      <div class="toolbar no-print"><label class="sub">Filter bulan:</label><select id="monthFilter"><option value="all">Semua bulan</option></select><input id="reportSearch" placeholder="Cari transaksi..."></div>
+      <div class="table-scroll"><table><thead><tr><th>TANGGAL</th><th>KETERANGAN</th><th>KATEGORI</th><th>JENIS</th><th>NOMINAL</th><th class="no-print editor-cell">AKSI</th></tr></thead><tbody id="reportRows"></tbody></table></div>
+    </div>
+  </section>
+</main>
+</div>
+<div class="modal-backdrop" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+  <form class="login-card" id="loginForm">
+    <h2 id="loginTitle">🥐 Login Bendahara</h2>
+    <p>Masuk menggunakan akun bendahara untuk mengelola kas kelas.</p>
+    <div class="field"><label for="loginUsername">Username</label><input id="loginUsername" name="username" autocomplete="username" required></div>
+    <div class="field"><label for="loginPassword">Password</label><input id="loginPassword" name="password" type="password" autocomplete="current-password" required></div>
+    <div class="login-error" id="loginError" role="alert">Username atau password tidak sesuai.</div>
+    <div class="modal-actions"><button class="btn secondary" id="loginCancel" type="button">Batal</button><button class="btn" type="submit">Masuk</button></div>
+  </form>
+</div>
+<div class="modal-backdrop" id="editTxModal" role="dialog" aria-modal="true" aria-labelledby="editTxTitle">
+  <form class="login-card" id="editTxForm">
+    <h2 id="editTxTitle">✏️ Edit Transaksi</h2>
+    <p>Perbarui tanggal, keterangan, kategori, atau nominal transaksi. Saldo akan dihitung ulang otomatis.</p>
+    <input type="hidden" name="id">
+    <div class="field"><label for="editTxDate">Tanggal</label><input id="editTxDate" name="date" type="date" required></div>
+    <div class="field"><label for="editTxType">Jenis transaksi</label><input id="editTxType" type="text" readonly></div>
+    <div class="field"><label for="editTxCategory">Kategori</label><input id="editTxCategory" name="category" required maxlength="80"></div>
+    <div class="field"><label for="editTxNote">Nama / keterangan</label><input id="editTxNote" name="note" required maxlength="160"></div>
+    <div class="field"><label for="editTxAmount">Nominal (Rp)</label><input id="editTxAmount" name="amount" type="text" inputmode="numeric" autocomplete="off" placeholder="Contoh: 600.000" required></div>
+    <div class="modal-actions"><button class="btn secondary" id="editTxCancel" type="button">Batal</button><button class="btn" type="submit">Simpan perubahan</button></div>
+  </form>
+</div>
+<script>
+const KEY='kasflow_data_v1';
+// Catatan: akun di sisi-klien hanya pembatas sederhana, bukan autentikasi aman.
+const ACCOUNTS={
+  nonaambon:{password:'dindakebeletngising',name:'Bendahara 1'},
+  amelmaximoff:{password:'ownerdarkhold',name:'Bendahara 2'}
+};
+let activeTreasurer=null;
+const isAdmin=()=>Boolean(activeTreasurer);
+function requireAdmin(){if(!isAdmin()){alert('Silakan login sebagai bendahara untuk melakukan perubahan.');return false;}return true;}
+function updateAccessUI(){
+  document.body.classList.toggle('admin',isAdmin());
+  document.getElementById('authStatus').textContent=isAdmin()?`● ${activeTreasurer} · Mode bendahara`:'Mode publik · Hanya melihat';
+  document.getElementById('loginOpen').style.display=isAdmin()?'none':'inline-block';
+  document.getElementById('logoutBtn').style.display=isAdmin()?'inline-block':'none';
+  document.getElementById('publicNote').style.display=isAdmin()?'none':'block';
+}
+function openLogin(){document.getElementById('loginModal').classList.add('open');document.getElementById('loginUsername').focus();}
+function closeLogin(){document.getElementById('loginModal').classList.remove('open');document.getElementById('loginError').classList.remove('show');document.getElementById('loginForm').reset();}
+document.getElementById('loginOpen').addEventListener('click',openLogin);
+document.getElementById('loginCancel').addEventListener('click',closeLogin);
+document.getElementById('loginModal').addEventListener('click',e=>{if(e.target.id==='loginModal')closeLogin();});
+document.getElementById('loginForm').addEventListener('submit',e=>{
+  e.preventDefault();const f=new FormData(e.target),username=String(f.get('username')).trim(),password=String(f.get('password'));
+  const account=ACCOUNTS[username];
+  if(!account||account.password!==password){document.getElementById('loginError').classList.add('show');return;}
+  activeTreasurer=account.name;closeLogin();updateAccessUI();render();
+});
+document.getElementById('logoutBtn').addEventListener('click',()=>{activeTreasurer=null;updateAccessUI();render();showPage('dashboard');});
+
+let data;
+try {
+  data = JSON.parse(localStorage.getItem(KEY) || '{"transactions":[],"students":[]}');
+  if (!data || !Array.isArray(data.transactions) || !Array.isArray(data.students)) data = {transactions: [], students: []};
+} catch (error) { data = {transactions: [], students: []}; }
+data.settings = data.settings || {weeklyFee:5000};
+data.settings.weeklyFee = Number(data.settings.weeklyFee) > 0 ? Number(data.settings.weeklyFee) : 5000;
+data.holidays = data.holidays && typeof data.holidays==='object' ? data.holidays : {};
+data.students = data.students.map((student,index)=>{
+  const s={...student};
+  if(!s.id) s.id='legacy-'+index+'-'+Date.now();
+  if(!s.payments || typeof s.payments!=='object'){
+    s.payments={};
+    // Migrasi status lama: status Lunas dipetakan menjadi lunas untuk empat minggu pada bulan ini.
+    if(s.status==='Lunas') s.payments[new Date().toISOString().slice(0,7)]=[true,true,true,true];
+  }
+  return s;
+});
+const today=()=>new Date().toISOString().slice(0,10);
+let selectedPaymentMonth=today().slice(0,7);
+const rupiah=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n||0);
+// Baca nominal sebagai rupiah bulat: titik adalah pemisah ribuan.
+function parseRupiahInput(value){
+  const digits=String(value??'').replace(/[^0-9]/g,'');
+  if(!digits) return NaN;
+  const amount=Number(digits);
+  return Number.isSafeInteger(amount) ? amount : NaN;
+}
+function normalizeAmountField(input){
+  const amount=parseRupiahInput(input.value);
+  const valid=Number.isSafeInteger(amount)&&amount>0;
+  input.setCustomValidity(valid?'':'Masukkan nominal rupiah yang valid, misalnya 600.000.');
+  return valid;
+}
+document.querySelectorAll('#incomeForm [name="amount"],#expenseForm [name="amount"]').forEach(input=>{
+  input.addEventListener('input',()=>normalizeAmountField(input));
+  input.addEventListener('blur',()=>{
+    const amount=parseRupiahInput(input.value);
+    if(Number.isSafeInteger(amount)&&amount>0)
+      input.value=new Intl.NumberFormat('id-ID',{maximumFractionDigits:0}).format(amount);
+  });
+});
+
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify(data)); }
+  catch (error) { alert('Penyimpanan browser tidak tersedia. Data mungkin tidak tersimpan setelah halaman ditutup.'); }
+  render();
+}
+function showPage(id){
+  const target=document.getElementById(id);
+  if(!target || !target.classList.contains('page')) return;
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p===target));
+  document.querySelectorAll('#navigation button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
+  const titles={dashboard:'Dashboard',income:'Pemasukan Kas',expense:'Pengeluaran Kas',students:'Data Pembayaran Siswa',monthlySummary:'Rekap Bulanan',reports:'Laporan Keuangan'};
+  document.getElementById('pageTitle').textContent=titles[id]||'KasFlow';
+}
+document.getElementById('navigation').addEventListener('click',e=>{
+  const button=e.target.closest('button[data-page]');
+  if(button) showPage(button.dataset.page);
+});
+document.getElementById('today').textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+document.querySelectorAll('input[type=date]').forEach(i=>i.value=today());
+function addTransaction(type,form){
+  if(!requireAdmin())return;
+  const amountField=form.querySelector('[name="amount"]');
+  if(!normalizeAmountField(amountField)){amountField.reportValidity();amountField.focus();return;}
+  const f=new FormData(form),amount=parseRupiahInput(f.get('amount'));
+  if(!Number.isSafeInteger(amount)||amount<1){alert('Nominal tidak valid. Contoh penulisan: 600.000');amountField.focus();return;}
+  data.transactions.push({
+    id:(window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()+Math.random()),
+    type,date:f.get('date'),category:f.get('category'),note:String(f.get('note')||'').trim(),amount
+  });
+  form.reset();form.querySelector('[name=date]').value=today();
+  if(type==='income')form.querySelector('[name=category]').selectedIndex=0;
+  save();
+}
+document.getElementById('incomeForm').addEventListener('submit',e=>{e.preventDefault();addTransaction('income',e.target)});
+document.getElementById('expenseForm').addEventListener('submit',e=>{e.preventDefault();addTransaction('expense',e.target)});
+
+document.getElementById('bulkStudentForm').addEventListener('submit',e=>{e.preventDefault();if(!requireAdmin())return;const names=String(new FormData(e.target).get('names')||'').split(/\r?\n/).map(n=>n.trim()).filter(Boolean);const existing=new Set(data.students.map(s=>s.name.toLocaleLowerCase('id')));const fresh=[...new Set(names)].filter(n=>!existing.has(n.toLocaleLowerCase('id')));fresh.forEach(name=>data.students.push({id:(window.crypto&&crypto.randomUUID)?crypto.randomUUID():String(Date.now()+Math.random()),name,payments:{}}));e.target.reset();if(!fresh.length)alert('Tidak ada nama baru untuk ditambahkan.');else alert(fresh.length+' siswa berhasil ditambahkan.');save()});
+document.getElementById('feeForm').addEventListener('submit',e=>{e.preventDefault();if(!requireAdmin())return;const fee=Number(new FormData(e.target).get('weeklyFee'));if(!fee||fee<1)return;data.settings.weeklyFee=fee;save();alert('Nominal iuran mingguan diperbarui.');});
+function openEditTransaction(encodedId){
+  if(!requireAdmin())return;
+  let id;try{id=decodeURIComponent(encodedId)}catch(error){alert('ID transaksi tidak valid.');return;}
+  const tx=data.transactions.find(t=>String(t.id)===id);if(!tx){alert('Transaksi tidak ditemukan.');return;}
+  const form=document.getElementById('editTxForm');
+  form.elements.id.value=String(tx.id);form.elements.date.value=tx.date||today();
+  document.getElementById('editTxType').value=tx.type==='income'?'Pemasukan':'Pengeluaran';
+  form.elements.category.value=tx.category||'';form.elements.note.value=tx.note||'';
+  form.elements.amount.value=new Intl.NumberFormat('id-ID',{maximumFractionDigits:0}).format(Number(tx.amount)||0);
+  document.getElementById('editTxModal').classList.add('open');
+}
+function closeEditTransaction(){document.getElementById('editTxModal').classList.remove('open');}
+document.getElementById('editTxCancel').addEventListener('click',closeEditTransaction);
+document.getElementById('editTxModal').addEventListener('click',e=>{if(e.target.id==='editTxModal')closeEditTransaction();});
+const editAmount=document.getElementById('editTxAmount');
+editAmount.addEventListener('input',()=>normalizeAmountField(editAmount));
+editAmount.addEventListener('blur',()=>{const amount=parseRupiahInput(editAmount.value);if(Number.isSafeInteger(amount)&&amount>0)editAmount.value=new Intl.NumberFormat('id-ID',{maximumFractionDigits:0}).format(amount);});
+document.getElementById('editTxForm').addEventListener('submit',e=>{
+  e.preventDefault();if(!requireAdmin())return;
+  const form=e.currentTarget,amountField=form.elements.amount;
+  if(!normalizeAmountField(amountField)){amountField.reportValidity();amountField.focus();return;}
+  const f=new FormData(form),amount=parseRupiahInput(f.get('amount'));
+  if(!Number.isSafeInteger(amount)||amount<1){alert('Nominal tidak valid. Contoh penulisan: 600.000');amountField.focus();return;}
+  const tx=data.transactions.find(t=>String(t.id)===String(f.get('id')));
+  if(!tx){alert('Transaksi tidak ditemukan.');closeEditTransaction();return;}
+  tx.date=String(f.get('date'));tx.category=String(f.get('category')||'').trim();
+  tx.note=String(f.get('note')||'').trim();tx.amount=amount;
+  closeEditTransaction();save();alert('Transaksi berhasil diperbarui dan saldo dihitung ulang.');
+});
+function removeTx(id){if(!requireAdmin())return;if(confirm('Hapus transaksi ini?')){data.transactions=data.transactions.filter(t=>String(t.id)!==String(id));save()}}
+
+function setPayment(studentId,week,checked){if(!requireAdmin()){renderPayments();return;}if(isHoliday(selectedPaymentMonth,week)){renderPayments();return;}const student=data.students.find(s=>s.id===studentId);if(!student)return;const payments=paymentWeeks(student,selectedPaymentMonth);payments[week]=Boolean(checked);student.payments[selectedPaymentMonth]=payments;save();}
+function removeStudent(id){if(!requireAdmin())return;if(confirm('Hapus data siswa ini?')){data.students=data.students.filter(s=>s.id!==id);save()}}
+function monthLabel(month){const [y,m]=month.split('-').map(Number);return new Date(y,m-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});}
+function monthHolidays(month){if(!data.holidays[month]||typeof data.holidays[month]!=='object')data.holidays[month]={};return data.holidays[month];}
+function isHoliday(month,week){return Boolean(monthHolidays(month)[week]);}
+function toggleHoliday(week){if(!requireAdmin())return;const holidays=monthHolidays(selectedPaymentMonth);if(holidays[week]){if(confirm('Hapus tanda Libur Kas Minggu '+(week+1)+'?')){delete holidays[week];save();}return;}const reason=prompt('Masukkan alasan Libur Kas untuk Minggu '+(week+1)+':');if(reason===null)return;if(!reason.trim()){alert('Alasan Libur Kas wajib diisi.');return;}const hasPaid=data.students.some(s=>Boolean((s.payments&&s.payments[selectedPaymentMonth]||[])[week]));if(hasPaid&&!confirm('Ada siswa yang sudah tercatat membayar pada minggu ini. Tandai sebagai Libur Kas dan hapus centang pembayaran minggu ini?'))return;data.students.forEach(s=>{const weeks=paymentWeeks(s,selectedPaymentMonth);weeks[week]=false;s.payments[selectedPaymentMonth]=weeks;});holidays[week]={reason:reason.trim()};save();}
+function paymentWeeks(student,month){const a=student.payments&&student.payments[month];return Array.from({length:5},(_,i)=>Boolean(a&&a[i]));}
+function monthTotals(month){const holidays=monthHolidays(month),activeWeeks=[0,1,2,3,4].filter(i=>!holidays[i]);const rows=data.students.map(s=>({student:s,weeks:paymentWeeks(s,month)}));const count=rows.reduce((n,r)=>n+r.weeks.filter((paid,i)=>paid&&!holidays[i]).length,0);const full=activeWeeks.length?rows.filter(r=>activeWeeks.every(i=>r.weeks[i])):[];const partial=rows.filter(r=>!full.includes(r));return {rows,count,total:count*data.settings.weeklyFee,full,partial,activeWeekCount:activeWeeks.length,holidays};}
+function populateMonthOptions(){const months=new Set();const now=new Date();for(let i=-12;i<=13;i++){const d=new Date(now.getFullYear(),now.getMonth()+i,1);months.add(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'));}data.students.forEach(s=>Object.keys(s.payments||{}).forEach(m=>months.add(m)));months.add(selectedPaymentMonth);const sorted=[...months].sort().reverse();['paymentMonth','summaryMonth'].forEach(id=>{const el=document.getElementById(id),old=el.value||selectedPaymentMonth;el.innerHTML=sorted.map(m=>`<option value="${m}">${monthLabel(m)}</option>`).join('');el.value=months.has(old)?old:selectedPaymentMonth;});}
+function renderPayments(){
+ const q=(document.getElementById('studentSearch').value||'').toLocaleLowerCase('id');
+ const fee=data.settings.weeklyFee,holidays=monthHolidays(selectedPaymentMonth);
+ document.getElementById('weeklyFee').value=fee;
+ document.getElementById('monthFeeLabel').textContent=rupiah(fee)+' / minggu';
+ document.getElementById('paymentTableSubtitle').textContent='Periode '+monthLabel(selectedPaymentMonth)+' · '+rupiah(fee)+' per centang · 5 minggu';
+ const weekHeaders=[0,1,2,3,4].map(w=>{const holiday=holidays[w];return `<th class="week-cell ${holiday?'holiday-head':''}">MINGGU ${w+1}${holiday?'<span class="holiday-label">LIBUR KAS</span>':''}${isAdmin()?`<button type="button" class="btn secondary holiday-control no-print" onclick="toggleHoliday(${w})">${holiday?'Batalkan libur':'Tandai libur'}</button>`:''}${holiday?`<span class="holiday-reason">${esc(holiday.reason)}</span>`:''}</th>`}).join('');
+ document.getElementById('paymentHead').innerHTML='<tr><th>NAMA SISWA</th>'+weekHeaders+'<th>STATUS BULANAN</th><th class="editor-cell no-print">AKSI</th></tr>';
+ const filtered=data.students.filter(s=>s.name.toLocaleLowerCase('id').includes(q));
+ document.getElementById('studentRows').innerHTML=filtered.length?filtered.map(s=>{const weeks=paymentWeeks(s,selectedPaymentMonth),active=[0,1,2,3,4].filter(i=>!holidays[i]),full=active.length>0&&active.every(i=>weeks[i]);const weekCells=weeks.map((paid,i)=>{if(holidays[i])return `<td class="week-cell holiday-cell"><span class="holiday-strike">Minggu ${i+1}</span><span class="holiday-label">LIBUR KAS</span><span class="holiday-reason">${esc(holidays[i].reason)}</span></td>`;return `<td class="week-cell"><input class="week-check" type="checkbox" aria-label="${esc(s.name)} Minggu ${i+1}" ${paid?'checked':''} ${isAdmin()?'':'disabled'} onchange="setPayment('${String(s.id).replace(/'/g,'&#39;')}',${i},this.checked)">${paid?'<span class="fresh-label">Freshly Baked</span>':''}</td>`;}).join('');return `<tr><td><b>${esc(s.name)}</b></td>${weekCells}<td><span class="pill ${full?'paid':'unpaid'}">${full?'Lunas penuh':active.length?'Belum lunas':'Libur kas'}</span></td><td class="editor-cell no-print"><button class="btn danger" onclick="removeStudent('${String(s.id).replace(/'/g,'&#39;')}')">Hapus</button></td></tr>`;}).join(''):'<tr><td colspan="8" class="empty">Belum ada data siswa. Bendahara dapat menambahkan nama melalui form di sebelah kiri.</td></tr>';
+ const totals=monthTotals(selectedPaymentMonth);document.getElementById('monthCollected').textContent=rupiah(totals.total);document.getElementById('studentCount').textContent=data.students.length;document.getElementById('fullyPaidCount').textContent=totals.full.length;
+}
+function renderMonthlySummary(){const month=document.getElementById('summaryMonth').value||selectedPaymentMonth;const t=monthTotals(month);document.getElementById('summaryCollected').textContent=rupiah(t.total);document.getElementById('summaryWeekCount').textContent=t.count+' pembayaran diterima · '+t.activeWeekCount+' minggu aktif';document.getElementById('summaryFullyPaid').textContent=t.full.length;document.getElementById('summaryNotFull').textContent=t.partial.length;document.getElementById('fullyPaidList').innerHTML=t.full.length?t.full.map(r=>`<div class="name-item">🥐 ${esc(r.student.name)} <span class="sub">· ${t.activeWeekCount}/${t.activeWeekCount} minggu aktif</span></div>`).join(''):'<div class="empty">Belum ada siswa yang lunas penuh.</div>';document.getElementById('notFullList').innerHTML=t.partial.length?t.partial.map(r=>`<div class="name-item">${esc(r.student.name)} <span class="sub">· ${r.weeks.filter((paid,i)=>paid&&!t.holidays[i]).length}/${t.activeWeekCount} minggu aktif</span></div>`).join(''):'<div class="empty">Semua siswa sudah lunas penuh.</div>';}
+
+
+function txRows(items,actions=false){if(!items.length)return '<tr><td colspan="6" class="empty">Belum ada data.</td></tr>';return items.map(t=>{const id=encodeURIComponent(String(t.id));return `<tr><td>${esc(t.date)}</td><td>${esc(t.note)}</td><td>${esc(t.category)}</td><td>${t.type==='income'?'<span class="pill paid">Masuk</span>':'<span class="pill unpaid">Keluar</span>'}</td><td class="${t.type==='income'?'amount-in':'amount-out'}">${t.type==='income'?'+':'−'}${rupiah(t.amount)}</td>${actions?`<td class="no-print editor-cell"><div class="actions"><button class="btn secondary" onclick="openEditTransaction('${id}')">Edit</button><button class="btn danger" onclick="removeTx(decodeURIComponent('${id}'))">Hapus</button></div></td>`:''}</tr>`}).join('')}
+function simpleRows(items){if(!items.length)return '<tr><td colspan="4" class="empty">Belum ada transaksi.</td></tr>';return items.map(t=>{const id=encodeURIComponent(String(t.id));return `<tr><td>${esc(t.date)}</td><td>${esc(t.note)}<div class="sub">${esc(t.category)}</div></td><td class="${t.type==='income'?'amount-in':'amount-out'}">${t.type==='income'?'+':'−'}${rupiah(t.amount)}</td><td class="no-print editor-cell"><div class="actions"><button class="btn secondary" onclick="openEditTransaction('${id}')">Edit</button><button class="btn danger" onclick="removeTx(decodeURIComponent('${id}'))">Hapus</button></div></td></tr>`}).join('')}
+function render(){
+ const ins=data.transactions.filter(t=>t.type==='income'),outs=data.transactions.filter(t=>t.type==='expense');
+ const sum=a=>a.reduce((n,t)=>n+(Number.isSafeInteger(Number(t.amount))?Number(t.amount):0),0),dues=data.students.reduce((n,st)=>n+Object.entries(st.payments||{}).reduce((a,[m,weeks])=>a+(Array.isArray(weeks)?weeks.reduce((c,paid,i)=>c+(paid&&!isHoliday(m,i)?1:0),0):0),0)*data.settings.weeklyFee,0),ti=sum(ins)+dues,to=sum(outs),bal=ti-to;
+ document.getElementById('balance').textContent=rupiah(bal);document.getElementById('totalIncome').textContent=rupiah(ti);document.getElementById('totalExpense').textContent=rupiah(to);
+ document.getElementById('chartIncome').textContent=rupiah(ti);document.getElementById('chartExpense').textContent=rupiah(to);
+ document.getElementById('recentRows').innerHTML=[...data.transactions].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,6).map(t=>`<tr><td>${esc(t.date)}</td><td>${esc(t.note)}</td><td>${t.type==='income'?'Masuk':'Keluar'}</td><td class="${t.type==='income'?'amount-in':'amount-out'}">${t.type==='income'?'+':'−'}${rupiah(t.amount)}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">Belum ada transaksi.</td></tr>';
+ const max=Math.max(ti,to,1);document.getElementById('bars').innerHTML=`<div class="bar-group"><div class="bars"><div class="bar in" style="height:${Math.max(2,ti/max*100)}%"></div></div><span class="bar-label">Masuk</span></div><div class="bar-group"><div class="bars"><div class="bar out" style="height:${Math.max(2,to/max*100)}%"></div></div><span class="bar-label">Keluar</span></div>`;
+ document.getElementById('incomeRows').innerHTML=simpleRows([...ins].sort((a,b)=>b.date.localeCompare(a.date)));
+ document.getElementById('expenseRows').innerHTML=simpleRows([...outs].sort((a,b)=>b.date.localeCompare(a.date)));
+ populateMonthOptions();document.getElementById('paymentMonth').value=selectedPaymentMonth;document.getElementById('summaryMonth').value=selectedPaymentMonth;renderPayments();renderMonthlySummary();
+ const months=[...new Set(data.transactions.map(t=>t.date.slice(0,7)))].sort().reverse();const mf=document.getElementById('monthFilter'),old=mf.value;mf.innerHTML='<option value="all">Semua bulan</option>'+months.map(m=>`<option value="${m}">${monthLabel(m)}</option>`).join('');mf.value=months.includes(old)?old:'all';
+ renderReport();
+}
+function renderReport(){const month=document.getElementById('monthFilter').value,query=(document.getElementById('reportSearch').value||'').toLowerCase();const filtered=data.transactions.filter(t=>(month==='all'||t.date.startsWith(month))&&(t.note+' '+t.category).toLowerCase().includes(query));const sumType=type=>filtered.filter(t=>t.type===type).reduce((a,t)=>a+(Number.isSafeInteger(Number(t.amount))?Number(t.amount):0),0);const dues=data.students.reduce((n,st)=>n+Object.entries(st.payments||{}).reduce((a,[m,weeks])=>a+((month==='all'||m===month)&&Array.isArray(weeks)?weeks.reduce((c,paid,i)=>c+(paid&&!isHoliday(m,i)?1:0),0)*data.settings.weeklyFee:0),0),0);const a=sumType('income')+dues,b=sumType('expense');document.getElementById('reportIncome').textContent=rupiah(a);document.getElementById('reportExpense').textContent=rupiah(b);document.getElementById('reportBalance').textContent=rupiah(a-b);document.getElementById('reportRows').innerHTML=txRows([...filtered].sort((x,y)=>y.date.localeCompare(x.date)),true)}
+document.getElementById('monthFilter').addEventListener('change',renderReport);document.getElementById('reportSearch').addEventListener('input',renderReport);document.getElementById('studentSearch').addEventListener('input',renderPayments);
+document.getElementById('paymentMonth').addEventListener('change',e=>{selectedPaymentMonth=e.target.value;document.getElementById('summaryMonth').value=selectedPaymentMonth;renderPayments();renderMonthlySummary();});
+document.getElementById('summaryMonth').addEventListener('change',renderMonthlySummary);
+document.getElementById('prevMonth').addEventListener('click',()=>shiftPaymentMonth(-1));document.getElementById('nextMonth').addEventListener('click',()=>shiftPaymentMonth(1));
+document.getElementById('customMonth').addEventListener('change',e=>{if(e.target.value){selectedPaymentMonth=e.target.value;populateMonthOptions();document.getElementById('paymentMonth').value=selectedPaymentMonth;document.getElementById('summaryMonth').value=selectedPaymentMonth;renderPayments();renderMonthlySummary();}});
+function shiftPaymentMonth(delta){const [y,m]=selectedPaymentMonth.split('-').map(Number),d=new Date(y,m-1+delta,1);selectedPaymentMonth=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');populateMonthOptions();document.getElementById('paymentMonth').value=selectedPaymentMonth;document.getElementById('summaryMonth').value=selectedPaymentMonth;document.getElementById('customMonth').value=selectedPaymentMonth;renderPayments();renderMonthlySummary();}
+function exportCSV(){const rows=[['Tanggal','Keterangan','Kategori','Jenis','Nominal'],...data.transactions.map(t=>[t.date,t.note,t.category,t.type==='income'?'Pemasukan':'Pengeluaran',t.amount])];const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='laporan-kasflow.csv';a.click();URL.revokeObjectURL(a.href)}
+window.addEventListener('storage',e=>{if(e.key===KEY){try{const incoming=JSON.parse(e.newValue||'{"transactions":[],"students":[]}');if(Array.isArray(incoming.transactions)&&Array.isArray(incoming.students)){data=incoming;data.settings=data.settings||{weeklyFee:5000};data.settings.weeklyFee=Number(data.settings.weeklyFee)||5000;data.holidays=data.holidays&&typeof data.holidays==='object'?data.holidays:{};render();}}catch(err){console.warn('Data kas dari tab lain tidak dapat dibaca.',err);}}});
+document.getElementById('customMonth').value=selectedPaymentMonth;updateAccessUI();
+render();
+</script>
+</body>
+</html>
